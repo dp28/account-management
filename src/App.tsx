@@ -2,17 +2,13 @@ import React from "react";
 import { Counter } from "./features/counter/Counter";
 import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <Counter />
-        <span>
-          <span>Learn </span>
-        </span>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+export const App = () => (
+  <div className="App">
+    <header className="App-header">
+      <Counter />
+      <span>
+        <span>Learn </span>
+      </span>
+    </header>
+  </div>
+);
