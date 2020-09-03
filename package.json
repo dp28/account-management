@@ -29,7 +29,8 @@
     "typescript": "~3.8.2"
   },
   "devDependencies": {
-    "electron": "^10.1.0"
+    "electron": "^10.1.0",
+    "electron-devtools-installer": "^3.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"

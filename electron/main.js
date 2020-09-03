@@ -1,6 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const url = require("url");
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+} = require("electron-devtools-installer");
 const { channels } = require("../src/shared/constants");
 
 let mainWindow;
@@ -27,6 +31,12 @@ function createWindow() {
 }
 
 app.on("ready", createWindow);
+
+app.whenReady().then(() => {
+  installExtension(REDUX_DEVTOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log("An error occurred: ", err));
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
