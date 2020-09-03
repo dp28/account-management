@@ -6,14 +6,17 @@ interface IpcRenderer {
   removeAllListeners: (channelName: string) => void;
 }
 
-// Based on https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
-const ipcRenderer: IpcRenderer = (window as any).ipcRenderer;
+function getIpcRenderer(): IpcRenderer {
+  // Based on https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
+  return (window as any).ipcRenderer as IpcRenderer;
+}
 
 export function buildRequestFunction<ResponseType>(
   channelName: string
 ): () => Promise<ResponseType> {
   return () =>
     new Promise((resolve) => {
+      const ipcRenderer = getIpcRenderer();
       ipcRenderer.send(channelName);
       ipcRenderer.on(channelName, (_event: any, response: ResponseType) => {
         ipcRenderer.removeAllListeners(channelName);

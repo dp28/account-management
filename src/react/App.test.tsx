@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { App } from "./App";
 
+(global as any).ipcRenderer = { send: () => {}, on: () => {} };
+
 test("renders learn react link", () => {
   const { getByText } = render(
     <Provider store={store}>
@@ -11,5 +13,6 @@ test("renders learn react link", () => {
     </Provider>
   );
 
-  expect(getByText(/learn/i)).toBeInTheDocument();
+  const element = getByText(/learn/i);
+  expect(element).not.toBeNull();
 });
