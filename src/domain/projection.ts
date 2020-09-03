@@ -6,15 +6,15 @@ import {
 } from "./people";
 import { Events } from "./events";
 
-export interface RootState {
+export interface DomainState {
   people: PeopleState;
 }
 
-export const InitialRootState: RootState = {
+export const InitialRootState: DomainState = {
   people: InitialPeopleState,
 };
 
-export type DomainReducer = (state: RootState, event: Events) => RootState;
+export type DomainReducer = (state: DomainState, event: Events) => DomainState;
 
 export const reducer: DomainReducer = combineReducers({
   people: peopleReducer,

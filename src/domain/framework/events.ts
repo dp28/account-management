@@ -64,3 +64,14 @@ export function buildAction<Type extends string, Payload>(
     payload,
   };
 }
+
+export interface ActionPerformerMap {
+  [type: string]: PerformAction;
+}
+
+export function combineActionPerformers(
+  actionPerformerMaps: ActionPerformerMap[]
+): PerformAction {
+  const actionPerformerMap = Object.assign({}, ...actionPerformerMaps);
+  return (state, action) => actionPerformerMap[action.type](state, action);
+}

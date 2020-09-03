@@ -5,6 +5,7 @@ import {
   generateId,
   buildDomainEvent,
   buildAction,
+  ActionPerformerMap,
 } from "../framework";
 import { selectPerson, Name, Person } from "./state";
 
@@ -54,3 +55,8 @@ export const performRenamePerson: PerformAction = (state, action) => {
 };
 
 export type PeopleEvents = PersonAddedEvent | PersonRenamedEvent;
+
+export const actionPerformerMap: ActionPerformerMap = {
+  [ADD_PERSON]: performAddPerson,
+  [RENAME_PERSON]: performRenamePerson,
+};
