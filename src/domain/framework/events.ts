@@ -1,11 +1,14 @@
-import { Action as ReduxAction } from "@reduxjs/toolkit";
 import { generateId } from "./identity";
 import { RootState } from "../projection";
 
 export type ID = string;
 
-export interface Action<Type, PayloadType> extends ReduxAction<Type> {
-  type: Type;
+export interface AnyActionOrEvent {
+  type: string;
+}
+
+export interface Action<PayloadType> extends AnyActionOrEvent {
+  type: string;
   payload: PayloadType;
 }
 
@@ -14,8 +17,8 @@ export interface EventBase {
   createdAt: Date;
 }
 
-export interface DomainEvent<Type, PayloadType> extends EventBase {
-  type: Type;
+export interface DomainEvent<PayloadType> extends EventBase, AnyActionOrEvent {
+  type: string;
   payload: PayloadType;
 }
 
@@ -24,12 +27,12 @@ export const VALIDATION_ERROR = "error/VALIDATION_ERROR";
 export interface ValidationError {
   type: typeof VALIDATION_ERROR;
   message: string;
-  action: ReduxAction<string>;
+  action: Action<any>;
 }
 
 export function buildValidationError(
   message: string,
-  action: ReduxAction<string>
+  action: Action<any>
 ): ValidationError {
   return {
     type: VALIDATION_ERROR,
@@ -48,11 +51,3 @@ export function buildEventBase(): EventBase {
     createdAt: new Date(),
   };
 }
-
-export const buildActionType = (name: string) => `action/${name}`;
-export const buildEventType = (name: string) => `event/${name}`;
-
-export const buildActionEventPair = (
-  actionName: string,
-  eventType: string
-): [string, string] => [buildActionType(actionName), buildEventType(eventType)];

@@ -19,11 +19,13 @@ interface AddPersonInput {
   name: Name;
 }
 
-export interface AddPersonAction
-  extends Action<typeof ADD_PERSON, AddPersonInput> {}
+export interface AddPersonAction extends Action<AddPersonInput> {
+  type: typeof ADD_PERSON;
+}
 
-export interface PersonAddedEvent
-  extends DomainEvent<typeof PERSON_ADDED, Person> {}
+export interface PersonAddedEvent extends DomainEvent<Person> {
+  type: typeof PERSON_ADDED;
+}
 
 export function addPerson(input: AddPersonInput): AddPersonAction {
   return {
@@ -50,11 +52,13 @@ interface RenamePersonPayload {
   name: Name;
 }
 
-export interface RenamePersonAction
-  extends Action<typeof RENAME_PERSON, RenamePersonInput> {}
+export interface RenamePersonAction extends Action<RenamePersonInput> {
+  type: typeof RENAME_PERSON;
+}
 
-export interface PersonRenamedEvent
-  extends DomainEvent<typeof PERSON_RENAMED, RenamePersonPayload> {}
+export interface PersonRenamedEvent extends DomainEvent<RenamePersonPayload> {
+  type: typeof PERSON_RENAMED;
+}
 
 export function renamePerson(input: RenamePersonInput): RenamePersonAction {
   return {
