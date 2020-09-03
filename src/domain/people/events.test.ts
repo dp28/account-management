@@ -6,7 +6,7 @@ import {
   performRenamePerson,
   PersonRenamedEvent,
 } from "./events";
-import { RootState, InitialRootState } from "../state";
+import { RootState, InitialRootState } from "../projection";
 import { Person } from "./state";
 import { VALIDATION_ERROR } from "../framework";
 

@@ -6,7 +6,7 @@ import {
   reducer,
   InitialState,
 } from "./state";
-import { InitialRootState, RootState } from "../state";
+import { InitialRootState, RootState } from "../projection";
 import {
   PERSON_ADDED,
   PersonAddedEvent,

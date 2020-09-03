@@ -1,6 +1,6 @@
 import { Action as ReduxAction } from "@reduxjs/toolkit";
 import { generateId } from "./identity";
-import { RootState } from "../state";
+import { RootState } from "../projection";
 
 export type ID = string;
 

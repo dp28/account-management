@@ -1,6 +1,6 @@
 import produce, { Draft } from "immer";
 import { ID, get } from "../framework";
-import { RootState } from "../state";
+import { RootState } from "../projection";
 import { PeopleEvents, PERSON_ADDED, PERSON_RENAMED } from "./events";
 
 export interface Name {
