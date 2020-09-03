@@ -1,24 +1,15 @@
 import React from "react";
-import { Button } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
-import { selectPeople, Person as PersonData, addPerson } from "../../../domain";
+import { useSelector } from "react-redux";
+import { selectPeople, Person as PersonData } from "../../../domain";
+import { AddPerson } from "./AddPerson";
 
 export function People() {
   const people = useSelector(selectPeople);
-  const dispatch = useDispatch();
 
   return (
     <div>
       <h2>People</h2>
-      <Button
-        onClick={() =>
-          dispatch(
-            addPerson({ name: { firstName: "Anne", lastName: "Example" } })
-          )
-        }
-      >
-        Add Person
-      </Button>
+      <AddPerson />
       <ul>
         {Object.values(people).map((person) => (
           <li key={person.id}>
