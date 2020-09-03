@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { selectPeople, Person as PersonData, addPerson } from "../../../domain";
 
@@ -9,7 +10,7 @@ export function People() {
   return (
     <div>
       <h2>People</h2>
-      <button
+      <Button
         onClick={() =>
           dispatch(
             addPerson({ name: { firstName: "Anne", lastName: "Example" } })
@@ -17,7 +18,7 @@ export function People() {
         }
       >
         Add Person
-      </button>
+      </Button>
       <ul>
         {Object.values(people).map((person) => (
           <li key={person.id}>
