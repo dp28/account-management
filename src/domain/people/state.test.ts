@@ -9,11 +9,10 @@ import {
 import { InitialRootState, RootState } from "../projection";
 import {
   PERSON_ADDED,
-  PersonAddedEvent,
   PERSON_RENAMED,
-  PersonRenamedEvent,
+  buildPersonAddedEvent,
+  buildPersonRenamedEvent,
 } from "./events";
-import { buildEventBase } from "../framework";
 
 function buildPerson(
   { id = "1", name = { firstName: "a", lastName: "b" } } = {},
@@ -60,11 +59,7 @@ describe("reducer", () => {
   describe(`with a ${PERSON_ADDED} event`, () => {
     const [person, personAddedState] = buildPerson();
 
-    const event: PersonAddedEvent = {
-      ...buildEventBase(),
-      type: PERSON_ADDED,
-      payload: person,
-    };
+    const event = buildPersonAddedEvent(person);
 
     describe("when the person has not been added before", () => {
       const newState = reducer(InitialState, event);
@@ -87,11 +82,10 @@ describe("reducer", () => {
     const [person, personAddedState] = buildPerson();
     const newName = { firstName: "Jean", lastName: "Smith" };
 
-    const event: PersonRenamedEvent = {
-      ...buildEventBase(),
-      type: PERSON_RENAMED,
-      payload: { personId: person.id, name: newName },
-    };
+    const event = buildPersonRenamedEvent({
+      personId: person.id,
+      name: newName,
+    });
 
     describe("when the person has been added before", () => {
       const newState = reducer(personAddedState.people, event);

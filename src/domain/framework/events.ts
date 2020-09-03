@@ -12,14 +12,11 @@ export interface Action<PayloadType> extends AnyActionOrEvent {
   payload: PayloadType;
 }
 
-export interface EventBase {
-  id: ID;
-  createdAt: Date;
-}
-
-export interface DomainEvent<PayloadType> extends EventBase, AnyActionOrEvent {
+export interface DomainEvent<PayloadType> extends AnyActionOrEvent {
   type: string;
   payload: PayloadType;
+  id: ID;
+  createdAt: Date;
 }
 
 export const VALIDATION_ERROR = "error/VALIDATION_ERROR";
@@ -41,13 +38,29 @@ export function buildValidationError(
   };
 }
 
-export interface PerformAction<ActionType, EventType> {
-  (state: RootState, action: ActionType): Readonly<EventType> | ValidationError;
-}
+export type PerformAction = (
+  state: RootState,
+  action: Action<any>
+) => Readonly<DomainEvent<any>> | Readonly<ValidationError>;
 
-export function buildEventBase(): EventBase {
+export function buildDomainEvent<Type extends string, Payload>(
+  type: Type,
+  payload: Payload
+) {
   return {
     id: generateId(),
     createdAt: new Date(),
+    type,
+    payload,
+  };
+}
+
+export function buildAction<Type extends string, Payload>(
+  type: Type,
+  payload: Payload
+) {
+  return {
+    type,
+    payload,
   };
 }
