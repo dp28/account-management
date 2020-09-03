@@ -10,11 +10,14 @@ export interface DomainState {
   people: PeopleState;
 }
 
-export const InitialRootState: DomainState = {
+export const InitialDomainState: DomainState = {
   people: InitialPeopleState,
 };
 
-export type DomainReducer = (state: DomainState, event: Events) => DomainState;
+export type DomainReducer = (
+  state: DomainState | undefined,
+  event: Events
+) => DomainState;
 
 export const reducer: DomainReducer = combineReducers({
   people: peopleReducer,

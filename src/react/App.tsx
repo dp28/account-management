@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { requestAppInfo, AppInfo } from "./communication";
 import "./App.css";
+import { People } from "./features/people/People";
 
 export const App = () => {
   const [appInfo, setAppInfo] = useState<AppInfo | undefined>();
@@ -15,12 +16,8 @@ export const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        {header}
-        <span>
-          <span>Learn </span>
-        </span>
-      </header>
+      <header className="App-header">{header}</header>
+      <People />
     </div>
   );
 };

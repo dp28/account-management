@@ -13,6 +13,6 @@ test("renders learn react link", () => {
     </Provider>
   );
 
-  const element = getByText(/learn/i);
+  const element = getByText(/Add Person/i);
   expect(element).not.toBeNull();
 });

@@ -1,5 +1,5 @@
 import { generateId } from "./identity";
-import { RootState } from "../projection";
+import { DomainState } from "../projection";
 
 export type ID = string;
 
@@ -39,7 +39,7 @@ export function buildValidationError(
 }
 
 export type PerformAction = (
-  state: RootState,
+  state: DomainState,
   action: Action<any>
 ) => Readonly<DomainEvent<any>> | Readonly<ValidationError>;
 

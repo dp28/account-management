@@ -6,7 +6,7 @@ import {
   reducer,
   InitialState,
 } from "./state";
-import { InitialRootState, RootState } from "../projection";
+import { InitialDomainState, DomainState } from "../projection";
 import {
   PERSON_ADDED,
   PERSON_RENAMED,
@@ -16,8 +16,8 @@ import {
 
 function buildPerson(
   { id = "1", name = { firstName: "a", lastName: "b" } } = {},
-  state = InitialRootState
-): [Person, RootState] {
+  state = InitialDomainState
+): [Person, DomainState] {
   const person = { id, name };
   const newState = produce(state, (draft) => {
     draft.people.people[id] = person;
@@ -27,7 +27,7 @@ function buildPerson(
 
 describe("selectPeople", () => {
   it("returns the people map", () => {
-    expect(selectPeople(InitialRootState)).toEqual({});
+    expect(selectPeople(InitialDomainState)).toEqual({});
   });
 
   describe("if there is a person", () => {
@@ -42,7 +42,7 @@ describe("selectPeople", () => {
 describe("selectPerson", () => {
   describe("if the person does not exist", () => {
     it("returns undefined", () => {
-      expect(selectPerson("1")(InitialRootState)).toBeUndefined();
+      expect(selectPerson("1")(InitialDomainState)).toBeUndefined();
     });
   });
 

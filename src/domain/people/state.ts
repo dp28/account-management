@@ -1,6 +1,6 @@
 import produce, { Draft } from "immer";
 import { ID, get } from "../framework";
-import { RootState } from "../projection";
+import { DomainState } from "../projection";
 import { PeopleEvents, PERSON_ADDED, PERSON_RENAMED } from "./events";
 
 export interface Name {
@@ -21,9 +21,9 @@ export const InitialState: PeopleState = {
   people: {},
 };
 
-export const selectPeople = (state: RootState) => state.people.people;
+export const selectPeople = (state: DomainState) => state.people.people;
 
-export const selectPerson = (personId: ID) => (state: RootState) =>
+export const selectPerson = (personId: ID) => (state: DomainState) =>
   get(personId, selectPeople(state));
 
 export const reducer = produce(

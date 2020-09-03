@@ -6,13 +6,13 @@ import {
   performRenamePerson,
   PersonRenamedEvent,
 } from "./events";
-import { RootState, InitialRootState } from "../projection";
+import { DomainState, InitialDomainState } from "../projection";
 import { Person } from "./state";
 import { VALIDATION_ERROR } from "../framework";
 
 describe("performAddPerson", () => {
   const action = addPerson({ name: { firstName: "John", lastName: "Smith" } });
-  const state = InitialRootState;
+  const state = InitialDomainState;
   const event = performAddPerson(state, action) as PersonAddedEvent;
 
   it("creates a person with the passed-in name", () => {
@@ -31,8 +31,8 @@ describe("performRenamePerson", () => {
     personId: person.id,
     name: { firstName: "John", lastName: "Smith" },
   });
-  const state: RootState = {
-    ...InitialRootState,
+  const state: DomainState = {
+    ...InitialDomainState,
     people: { people: { [person.id]: person } },
   };
 
@@ -43,7 +43,7 @@ describe("performRenamePerson", () => {
 
   describe("if the person does not exist", () => {
     it("returns a validation error", () => {
-      expect(performRenamePerson(InitialRootState, action).type).toEqual(
+      expect(performRenamePerson(InitialDomainState, action).type).toEqual(
         VALIDATION_ERROR
       );
     });
