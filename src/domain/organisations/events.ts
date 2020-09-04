@@ -7,7 +7,7 @@ import {
   buildAction,
   ActionPerformerMap,
 } from "../framework";
-import { selectOrganisation, Name, Organisation } from "./state";
+import { selectOrganisation, Organisation } from "./state";
 
 export const ADD_ORGANISATION = "action/ADD_ORGANISATION";
 export const ORGANISATION_ADDED = "event/ORGANISATION_ADDED";
@@ -15,7 +15,7 @@ export const ORGANISATION_ADDED = "event/ORGANISATION_ADDED";
 export const RENAME_ORGANISATION = "action/RENAME_ORGANISATION";
 export const ORGANISATION_RENAMED = "event/ORGANISATION_RENAMED";
 
-export const addOrganisation = (input: { name: Name }) =>
+export const addOrganisation = (input: { name: string }) =>
   buildAction(ADD_ORGANISATION, input);
 export type AddOrganisationAction = ReturnType<typeof addOrganisation>;
 
@@ -32,12 +32,12 @@ export const performAddOrganisation: PerformAction = (state, action) => {
 
 interface RenameOrganisationInput {
   organisationId: ID;
-  name: Name;
+  name: string;
 }
 
 interface RenameOrganisationPayload {
   organisationId: ID;
-  name: Name;
+  name: string;
 }
 export const renameOrganisation = (input: RenameOrganisationInput) =>
   buildAction(RENAME_ORGANISATION, input);

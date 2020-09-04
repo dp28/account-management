@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import "./App.css";
-import { People } from "./features/people/People";
+import { useDispatch } from "react-redux";
 import { Grid, Container } from "@material-ui/core";
 import { loadEvents } from "./communication";
-import { useDispatch } from "react-redux";
+import { People } from "./features/people/People";
+import { Organisations } from "./features/organisations/Organisations";
+import "./App.css";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export const App = () => {
       <Container>
         <Grid container>
           <People />
+          <Organisations />
         </Grid>
       </Container>
     </div>

@@ -84,7 +84,7 @@ describe("reducer", () => {
 
   describe(`with a ${ORGANISATION_RENAMED} event`, () => {
     const [organisation, organisationAddedState] = buildOrganisation();
-    const newName = { firstName: "Jean", lastName: "Smith" };
+    const newName = "New Acme";
 
     const event = buildOrganisationRenamedEvent({
       organisationId: organisation.id,
