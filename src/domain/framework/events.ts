@@ -75,3 +75,11 @@ export function combineActionPerformers(
   const actionPerformerMap = Object.assign({}, ...actionPerformerMaps);
   return (state, action) => actionPerformerMap[action.type](state, action);
 }
+
+export function isDomainEvent(object: any): object is DomainEvent<any> {
+  return object.type && object.type.split("/")[0] === "event";
+}
+
+export function isAction(object: any): object is Action<any> {
+  return object.type && object.type.split("/")[0] === "action";
+}

@@ -1,11 +1,14 @@
 import { Dispatch } from "redux";
-import { Action } from "../../domain/framework";
-import { performAction } from "../../domain/actions";
-import { DomainState } from "../../domain";
+import { isAction } from "../../domain/framework";
+import { DomainState, performAction } from "../../domain";
 
 export const actionPerformerMiddleware = (store: {
   getState: () => DomainState;
-}) => (next: Dispatch) => (action: Action<any>) => {
-  const eventOrError = performAction(store.getState(), action);
-  next(eventOrError);
+}) => (next: Dispatch) => (actionOrEvent: { type: string }) => {
+  if (isAction(actionOrEvent)) {
+    const eventOrError = performAction(store.getState(), actionOrEvent);
+    next(eventOrError);
+  } else {
+    next(actionOrEvent);
+  }
 };
