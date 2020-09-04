@@ -67,9 +67,47 @@ ipcMain.on(channels.PERSIST_EVENT, async (event, domainEvent) => {
   }
 });
 
+ipcMain.on(channels.LOAD_EVENTS, async (event) => {
+  try {
+    const events = await loadEvents();
+    event.sender.send(channels.LOAD_EVENTS, events);
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      console.log("No data file found");
+      event.sender.send(channels.LOAD_EVENTS, []);
+    } else {
+      console.error(error);
+      event.sender.send(channels.LOAD_EVENTS, error);
+    }
+  }
+});
+
+const SEPARATOR = "\n";
+
 function persistEvent(domainEvent) {
-  const dataDir = app.getPath("appData");
-  const dataFile = path.join(dataDir, app.getName(), "data.jsonl");
+  const dataFile = getDataFilePath();
   console.log("Writing to file", dataFile);
-  return fs.appendFile(dataFile, JSON.stringify(domainEvent) + "\n");
+  return fs.appendFile(dataFile, JSON.stringify(domainEvent) + SEPARATOR, {
+    encoding: "utf8",
+  });
+}
+
+async function loadEvents() {
+  const dataFile = getDataFilePath();
+  console.log("Reading from file", dataFile);
+  const rawData = await fs.readFile(dataFile, { encoding: "utf8" });
+  const events = parseEvents(rawData);
+  console.log("Loaded", events.length, "events");
+  return events;
+}
+
+function getDataFilePath() {
+  const dataDir = app.getPath("appData");
+  return path.join(dataDir, app.getName(), "data.jsonl");
+}
+
+function parseEvents(data) {
+  const lines = data.split(SEPARATOR);
+  lines.pop();
+  return lines.map(JSON.parse);
 }
