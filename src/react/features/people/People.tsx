@@ -2,14 +2,13 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectPeople, Person as PersonData } from "../../../domain";
 import { AddPerson } from "./AddPerson";
+import { Card, CardContent, CardActions } from "@material-ui/core";
 
 export function People() {
   const people = useSelector(selectPeople);
 
   return (
     <div>
-      <h2>People</h2>
-      <AddPerson />
       <ul>
         {Object.values(people).map((person) => (
           <li key={person.id}>
@@ -17,6 +16,7 @@ export function People() {
           </li>
         ))}
       </ul>
+      <AddPerson />
     </div>
   );
 }

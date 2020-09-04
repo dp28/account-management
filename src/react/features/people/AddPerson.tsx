@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, TextField } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+} from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { addPerson } from "../../../domain";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -12,11 +19,14 @@ const useStyles = makeStyles((theme: Theme) =>
         width: "25ch",
       },
     },
+    title: {
+      fontSize: 14,
+    },
   })
 );
 
 export function AddPerson() {
-  const styles = useStyles();
+  const classes = useStyles();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const dispatch = useDispatch();
@@ -27,23 +37,35 @@ export function AddPerson() {
   };
 
   return (
-    <form className={styles.root} onSubmit={submit}>
-      <h2>Add new person</h2>
-      <TextField
-        id="firstName"
-        required
-        label="First name"
-        value={firstName}
-        onChange={(event) => setFirstName(event.target.value)}
-      />
-      <TextField
-        id="lastName"
-        required
-        label="Last name"
-        value={lastName}
-        onChange={(event) => setLastName(event.target.value)}
-      />
-      <Button type="submit">Add Person</Button>
+    <form className={classes.root} onSubmit={submit}>
+      <Card>
+        <CardContent>
+          <Typography
+            className={classes.title}
+            color="textSecondary"
+            gutterBottom
+          >
+            Add new person
+          </Typography>
+          <TextField
+            id="firstName"
+            required
+            label="First name"
+            value={firstName}
+            onChange={(event) => setFirstName(event.target.value)}
+          />
+          <TextField
+            id="lastName"
+            required
+            label="Last name"
+            value={lastName}
+            onChange={(event) => setLastName(event.target.value)}
+          />
+        </CardContent>
+        <CardActions>
+          <Button type="submit">Add Person</Button>
+        </CardActions>
+      </Card>
     </form>
   );
 }
