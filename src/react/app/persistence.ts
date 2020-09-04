@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import { DomainEvent, isDomainEvent } from "../../domain";
+import { persistEvent } from "../communication";
 
 export const persistenceMiddleware = (store: any) => (
   next: Dispatch
@@ -12,4 +13,5 @@ export const persistenceMiddleware = (store: any) => (
 
 function persist(event: DomainEvent<any>): void {
   console.debug("Persisting", event);
+  persistEvent(event);
 }

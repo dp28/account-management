@@ -1,7 +1,8 @@
 import { channels } from "../shared/constants";
+import { DomainEvent } from "../domain";
 
 interface IpcRenderer {
-  send: (channelName: string) => void;
+  send: (channelName: string, ...args: any[]) => void;
   on: <T>(event: any, arg: T) => void;
   removeAllListeners: (channelName: string) => void;
 }
@@ -11,13 +12,13 @@ function getIpcRenderer(): IpcRenderer {
   return (window as any).ipcRenderer as IpcRenderer;
 }
 
-export function buildRequestFunction<ResponseType>(
+export function buildRequestFunction<ResponseType, InputType = void>(
   channelName: string
-): () => Promise<ResponseType> {
-  return () =>
+): (input: InputType) => Promise<ResponseType> {
+  return (input) =>
     new Promise((resolve) => {
       const ipcRenderer = getIpcRenderer();
-      ipcRenderer.send(channelName);
+      ipcRenderer.send(channelName, input);
       ipcRenderer.on(channelName, (_event: any, response: ResponseType) => {
         ipcRenderer.removeAllListeners(channelName);
         resolve(response);
@@ -31,3 +32,9 @@ export interface AppInfo {
 }
 
 export const requestAppInfo = buildRequestFunction<AppInfo>(channels.APP_INFO);
+export const persistEvent = buildRequestFunction<boolean, DomainEvent<any>>(
+  channels.PERSIST_EVENT
+);
+export const loadEvents = buildRequestFunction<DomainEvent<any>[]>(
+  channels.LOAD_EVENTS
+);

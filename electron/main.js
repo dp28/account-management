@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const url = require("url");
+const fs = require("fs").promises;
 const {
   default: installExtension,
   REDUX_DEVTOOLS,
@@ -56,3 +57,19 @@ ipcMain.on(channels.APP_INFO, (event) => {
     appVersion: app.getVersion(),
   });
 });
+
+ipcMain.on(channels.PERSIST_EVENT, async (event, domainEvent) => {
+  try {
+    await persistEvent(domainEvent);
+    event.sender.send(channels.PERSIST_EVENT, true);
+  } catch {
+    event.sender.send(channels.PERSIST_EVENT, false);
+  }
+});
+
+function persistEvent(domainEvent) {
+  const dataDir = app.getPath("appData");
+  const dataFile = path.join(dataDir, app.getName(), "data.jsonl");
+  console.log("Writing to file", dataFile);
+  return fs.appendFile(dataFile, JSON.stringify(domainEvent) + "\n");
+}
