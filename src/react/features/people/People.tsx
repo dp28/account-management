@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectPeople, Person as PersonData } from "../../../domain";
 import { AddPerson } from "./AddPerson";
-import { Card, CardContent, CardActions } from "@material-ui/core";
 
 export function People() {
   const people = useSelector(selectPeople);
