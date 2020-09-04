@@ -1,6 +1,6 @@
 {
-  "name": "money",
-  "productName": "Money Management",
+  "name": "account-management",
+  "productName": "Account Management",
   "version": "0.1.0",
   "private": true,
   "main": "electron/main.js",
