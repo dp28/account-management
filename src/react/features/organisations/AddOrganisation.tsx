@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
   Button,
-  TextField,
-  Card,
-  CardContent,
-  CardActions,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -33,12 +34,13 @@ export function AddOrganisation() {
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(addOrganisation({ name }));
+    setName("");
   };
 
   return (
     <form className={classes.root} onSubmit={submit}>
-      <Card>
-        <CardContent>
+      <Accordion>
+        <AccordionSummary>
           <Typography
             className={classes.title}
             color="textSecondary"
@@ -46,6 +48,8 @@ export function AddOrganisation() {
           >
             Add new organisation
           </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
           <TextField
             id="organisationName"
             required
@@ -53,11 +57,11 @@ export function AddOrganisation() {
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </CardContent>
-        <CardActions>
+        </AccordionDetails>
+        <AccordionActions>
           <Button type="submit">Add Organisation</Button>
-        </CardActions>
-      </Card>
+        </AccordionActions>
+      </Accordion>
     </form>
   );
 }

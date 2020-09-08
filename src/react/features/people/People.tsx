@@ -2,28 +2,27 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectPeople, Person as PersonData } from "../../../domain";
 import { AddPerson } from "./AddPerson";
+import { Accordion, Card, AccordionSummary } from "@material-ui/core";
 
 export function People() {
   const people = useSelector(selectPeople);
 
   return (
-    <div>
-      <ul>
-        {Object.values(people).map((person) => (
-          <li key={person.id}>
-            <Person person={person} />
-          </li>
-        ))}
-      </ul>
+    <Card>
       <AddPerson />
-    </div>
+      {Object.values(people).map((person) => (
+        <Person key={person.id} person={person} />
+      ))}
+    </Card>
   );
 }
 
 export function Person({ person }: { person: PersonData }) {
   return (
-    <div>
-      {person.name.firstName} {person.name.lastName}
-    </div>
+    <Accordion>
+      <AccordionSummary>
+        {person.name.firstName} {person.name.lastName}
+      </AccordionSummary>
+    </Accordion>
   );
 }

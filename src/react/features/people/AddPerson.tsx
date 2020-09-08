@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
   Button,
-  TextField,
-  Card,
-  CardContent,
-  CardActions,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { addPerson } from "../../../domain";
@@ -34,12 +35,14 @@ export function AddPerson() {
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(addPerson({ name: { firstName, lastName } }));
+    setFirstName("");
+    setLastName("");
   };
 
   return (
     <form className={classes.root} onSubmit={submit}>
-      <Card>
-        <CardContent>
+      <Accordion>
+        <AccordionSummary>
           <Typography
             className={classes.title}
             color="textSecondary"
@@ -47,6 +50,8 @@ export function AddPerson() {
           >
             Add new person
           </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
           <TextField
             id="firstName"
             required
@@ -61,11 +66,11 @@ export function AddPerson() {
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
           />
-        </CardContent>
-        <CardActions>
+        </AccordionDetails>
+        <AccordionActions>
           <Button type="submit">Add Person</Button>
-        </CardActions>
-      </Card>
+        </AccordionActions>
+      </Accordion>
     </form>
   );
 }
