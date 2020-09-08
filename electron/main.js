@@ -83,13 +83,24 @@ ipcMain.on(channels.LOAD_EVENTS, async (event) => {
 });
 
 const SEPARATOR = "\n";
+const persistedEventIds = new Set([]);
 
-function persistEvent(domainEvent) {
+async function persistEvent(domainEvent) {
+  if (persistedEventIds.has(domainEvent.id)) {
+    return;
+  }
+
   const dataFile = getDataFilePath();
   console.log("Writing to file", dataFile);
-  return fs.appendFile(dataFile, JSON.stringify(domainEvent) + SEPARATOR, {
-    encoding: "utf8",
-  });
+  const result = await fs.appendFile(
+    dataFile,
+    JSON.stringify(domainEvent) + SEPARATOR,
+    {
+      encoding: "utf8",
+    }
+  );
+  persistedEventIds.add(domainEvent.id);
+  return result;
 }
 
 async function loadEvents() {
@@ -98,6 +109,7 @@ async function loadEvents() {
   const rawData = await fs.readFile(dataFile, { encoding: "utf8" });
   const events = parseEvents(rawData);
   console.log("Loaded", events.length, "events");
+  events.forEach((event) => persistedEventIds.add(event.id));
   return events;
 }
 
