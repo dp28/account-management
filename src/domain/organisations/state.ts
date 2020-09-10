@@ -23,6 +23,9 @@ export const InitialState: OrganisationsState = {
 export const selectOrganisations = (state: DomainState) =>
   state.organisations.organisations;
 
+export const selectOrganisationsArray = (state: DomainState) =>
+  Object.values(selectOrganisations(state));
+
 export const selectOrganisation = (organisationId: ID) => (
   state: DomainState
 ) => get(organisationId, selectOrganisations(state));

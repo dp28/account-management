@@ -5,7 +5,14 @@ import {
   Organisation as OrganisationData,
 } from "../../../domain";
 import { AddOrganisation } from "./AddOrganisation";
-import { Accordion, AccordionSummary, Card } from "@material-ui/core";
+import {
+  Accordion,
+  AccordionSummary,
+  Card,
+  AccordionDetails,
+  Typography,
+} from "@material-ui/core";
+import { Identities } from "../identities/Identities";
 
 export function Organisations() {
   const organisations = useSelector(selectOrganisations);
@@ -28,6 +35,9 @@ export function Organisation({
   return (
     <Accordion>
       <AccordionSummary>{organisation.name}</AccordionSummary>
+      <AccordionDetails>
+        <Identities organisationId={organisation.id} />
+      </AccordionDetails>
     </Accordion>
   );
 }

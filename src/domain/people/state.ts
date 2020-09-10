@@ -22,6 +22,8 @@ export const InitialState: PeopleState = {
 };
 
 export const selectPeople = (state: DomainState) => state.people.people;
+export const selectPeopleArray = (state: DomainState) =>
+  Object.values(selectPeople(state));
 
 export const selectPerson = (personId: ID) => (state: DomainState) =>
   get(personId, selectPeople(state));

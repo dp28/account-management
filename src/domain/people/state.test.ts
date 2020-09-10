@@ -1,4 +1,10 @@
-import { selectPeople, selectPerson, reducer, InitialState } from "./state";
+import {
+  selectPeople,
+  selectPerson,
+  reducer,
+  InitialState,
+  selectPeopleArray,
+} from "./state";
 import { InitialDomainState } from "../projection";
 import {
   PERSON_ADDED,
@@ -18,6 +24,20 @@ describe("selectPeople", () => {
 
     it("includes the person in the returned state", () => {
       expect(selectPeople(state)).toEqual({ [person.id]: person });
+    });
+  });
+});
+
+describe("selectPeopleArray", () => {
+  it("returns an array", () => {
+    expect(selectPeopleArray(InitialDomainState)).toEqual([]);
+  });
+
+  describe("if there is a person", () => {
+    const [person, state] = buildPerson();
+
+    it("includes the person in the returned state", () => {
+      expect(selectPeopleArray(state)).toEqual([person]);
     });
   });
 });

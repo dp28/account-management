@@ -1,9 +1,16 @@
-export { addPerson, renamePerson, selectPerson, selectPeople } from "./people";
+export {
+  addPerson,
+  renamePerson,
+  selectPerson,
+  selectPeople,
+  selectPeopleArray,
+} from "./people";
 export {
   addOrganisation,
   renameOrganisation,
   selectOrganisation,
   selectOrganisations,
+  selectOrganisationsArray,
 } from "./organisations";
 export {
   addIdentity,

@@ -3,6 +3,7 @@ import {
   selectOrganisation,
   reducer,
   InitialState,
+  selectOrganisationsArray,
 } from "./state";
 import { InitialDomainState } from "../projection";
 import {
@@ -25,6 +26,20 @@ describe("selectOrganisations", () => {
       expect(selectOrganisations(state)).toEqual({
         [organisation.id]: organisation,
       });
+    });
+  });
+});
+
+describe("selectOrganisationsArray", () => {
+  it("returns an array", () => {
+    expect(selectOrganisationsArray(InitialDomainState)).toEqual([]);
+  });
+
+  describe("if there is a organisation", () => {
+    const [organisation, state] = buildOrganisation();
+
+    it("includes the organisation in the returned state", () => {
+      expect(selectOrganisationsArray(state)).toEqual([organisation]);
     });
   });
 });
