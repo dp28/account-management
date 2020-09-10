@@ -1,29 +1,17 @@
-import { produce } from "immer";
 import {
   selectOrganisations,
-  Organisation,
   selectOrganisation,
   reducer,
   InitialState,
 } from "./state";
-import { InitialDomainState, DomainState } from "../projection";
+import { InitialDomainState } from "../projection";
 import {
   ORGANISATION_ADDED,
   ORGANISATION_RENAMED,
   buildOrganisationAddedEvent,
   buildOrganisationRenamedEvent,
 } from "./events";
-
-function buildOrganisation(
-  { id = "1", name = "Acme, Ince" } = {},
-  state = InitialDomainState
-): [Organisation, DomainState] {
-  const organisation = { id, name };
-  const newState = produce(state, (draft) => {
-    draft.organisations.organisations[id] = organisation;
-  });
-  return [organisation, newState];
-}
+import { buildOrganisation } from "./testSupport";
 
 describe("selectOrganisations", () => {
   it("returns the organisations map", () => {

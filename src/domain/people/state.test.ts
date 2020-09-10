@@ -1,29 +1,12 @@
-import { produce } from "immer";
-import {
-  selectPeople,
-  Person,
-  selectPerson,
-  reducer,
-  InitialState,
-} from "./state";
-import { InitialDomainState, DomainState } from "../projection";
+import { selectPeople, selectPerson, reducer, InitialState } from "./state";
+import { InitialDomainState } from "../projection";
 import {
   PERSON_ADDED,
   PERSON_RENAMED,
   buildPersonAddedEvent,
   buildPersonRenamedEvent,
 } from "./events";
-
-function buildPerson(
-  { id = "1", name = { firstName: "a", lastName: "b" } } = {},
-  state = InitialDomainState
-): [Person, DomainState] {
-  const person = { id, name };
-  const newState = produce(state, (draft) => {
-    draft.people.people[id] = person;
-  });
-  return [person, newState];
-}
+import { buildPerson } from "./testSupport";
 
 describe("selectPeople", () => {
   it("returns the people map", () => {
