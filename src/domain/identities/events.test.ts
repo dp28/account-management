@@ -7,20 +7,18 @@ import {
   IdentityDeletedEvent,
   IdentityInput,
 } from "./events";
-import { DomainState, InitialDomainState } from "../projection";
-import { Identity } from "./state";
-import { VALIDATION_ERROR, Action, DomainEvent } from "../framework";
-
-const identityInput = {
-  personId: "1",
-  organisationId: "2",
-  name: "Username",
-  value: "example",
-};
+import { InitialDomainState } from "../projection";
+import { VALIDATION_ERROR } from "../framework";
+import { buildIdentity } from "./testSupport";
 
 describe("performAddIdentity", () => {
-  const action = addIdentity(identityInput);
-  const state = InitialDomainState;
+  const [otherIdentity, state] = buildIdentity();
+  const action = addIdentity({
+    personId: otherIdentity.personId,
+    organisationId: otherIdentity.organisationId,
+    name: "Email",
+    value: "me@example.com",
+  });
   const event = performAddIdentity(state, action) as IdentityAddedEvent;
 
   const propertyNames: Array<keyof IdentityInput> = [
@@ -39,15 +37,27 @@ describe("performAddIdentity", () => {
     const repeatEvent = performAddIdentity(state, action) as IdentityAddedEvent;
     expect(event.payload.id).not.toEqual(repeatEvent.payload.id);
   });
+
+  describe("if the person does not exist", () => {
+    it("returns a validation error", () => {
+      expect(performAddIdentity(InitialDomainState, action).type).toEqual(
+        VALIDATION_ERROR
+      );
+    });
+  });
+
+  describe("if the organisation does not exist", () => {
+    it("returns a validation error", () => {
+      expect(performAddIdentity(InitialDomainState, action).type).toEqual(
+        VALIDATION_ERROR
+      );
+    });
+  });
 });
 
 describe("performDeleteIdentity", () => {
-  const identity: Identity = { id: "1", ...identityInput };
+  const [identity, state] = buildIdentity();
   const action = deleteIdentity({ identityId: identity.id });
-  const state: DomainState = {
-    ...InitialDomainState,
-    identities: { identities: { [identity.id]: identity } },
-  };
 
   it("creates an event with the passed-in identityId", () => {
     const event = performDeleteIdentity(state, action) as IdentityDeletedEvent;
