@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Grid, Container, Paper } from "@material-ui/core";
+import { Grid, Container } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { loadEvents } from "./communication";
 import { People } from "./features/people/People";

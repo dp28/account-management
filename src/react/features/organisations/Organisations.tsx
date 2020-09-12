@@ -10,7 +10,6 @@ import {
   AccordionSummary,
   Card,
   AccordionDetails,
-  Typography,
 } from "@material-ui/core";
 import { Identities } from "../identities/Identities";
 
