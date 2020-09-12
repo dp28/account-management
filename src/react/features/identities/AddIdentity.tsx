@@ -29,21 +29,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  organisationId?: ID;
-  personId?: ID;
+  organisationId: ID;
 };
 
-export function AddIdentity({
-  organisationId: fixedOrganisationId,
-  personId: fixedPersonId,
-}: Props) {
+export function AddIdentity({ organisationId }: Props) {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
-  const [organisationId, setOrganisationId] = useState(
-    fixedOrganisationId || ""
-  );
-  const [personId, setPersonId] = useState(fixedPersonId || "");
+  const [personId, setPersonId] = useState("");
   const dispatch = useDispatch();
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -81,9 +74,7 @@ export function AddIdentity({
             value={value}
             onChange={(event) => setValue(event.target.value)}
           />
-          {fixedPersonId || (
-            <PersonSelector onChange={(person) => setPersonId(person.id)} />
-          )}
+          <PersonSelector onChange={(person) => setPersonId(person.id)} />
         </AccordionDetails>
         <AccordionActions>
           <Button type="submit">Add Identity</Button>

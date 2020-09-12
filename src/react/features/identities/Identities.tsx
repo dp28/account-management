@@ -11,7 +11,7 @@ import { ID } from "../../../domain/framework";
 import { useSelector } from "react-redux";
 
 type Props = {
-  organisationId?: ID;
+  organisationId: ID;
   personId?: ID;
 };
 
@@ -25,7 +25,7 @@ export function Identities({ organisationId, personId }: Props) {
       <div>
         <Typography variant="h5">Identities</Typography>
       </div>
-      <AddIdentity organisationId={organisationId} personId={personId} />
+      <AddIdentity organisationId={organisationId} />
       {Object.values(identities).map((identity) => (
         <Identity key={identity.id} identity={identity} />
       ))}
