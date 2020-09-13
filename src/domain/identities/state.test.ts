@@ -4,6 +4,8 @@ import {
   reducer,
   InitialState,
   selectIdentitiesFor,
+  selectUniqueIdentityNames,
+  selectUniqueIdentityValuesForPerson,
 } from "./state";
 import { InitialDomainState } from "../projection";
 import {
@@ -26,6 +28,103 @@ describe("selectIdentities", () => {
       expect(selectIdentities(state)).toEqual({
         [identity.id]: identity,
       });
+    });
+  });
+});
+
+describe("selectUniqueIdentityNames", () => {
+  it("returns an array", () => {
+    expect(selectUniqueIdentityNames(InitialDomainState)).toEqual([]);
+  });
+
+  describe("if there is an identity", () => {
+    const [identity, state] = buildIdentity();
+
+    it("includes the name of the identity in the returned state", () => {
+      expect(selectUniqueIdentityNames(state)).toEqual([identity.name]);
+    });
+  });
+
+  describe("if there are multiple identities with the same name", () => {
+    const result = buildIdentity({
+      properties: { name: "Username" },
+    });
+    const secondResult = buildIdentity({
+      state: result[1],
+      properties: { name: "Username" },
+    });
+
+    it("includes the name only once", () => {
+      expect(selectUniqueIdentityNames(secondResult[1])).toEqual(["Username"]);
+    });
+  });
+
+  describe("if there are multiple identities with different names", () => {
+    const result = buildIdentity({
+      properties: { name: "Username" },
+    });
+    const secondResult = buildIdentity({
+      state: result[1],
+      properties: { name: "User ID" },
+    });
+
+    it("includes one copy of each unique name", () => {
+      expect(selectUniqueIdentityNames(secondResult[1])).toEqual([
+        "Username",
+        "User ID",
+      ]);
+    });
+  });
+});
+
+describe("selectUniqueIdentityValuesForPerson", () => {
+  const personId = "1";
+
+  it("returns an array", () => {
+    expect(
+      selectUniqueIdentityValuesForPerson(personId)(InitialDomainState)
+    ).toEqual([]);
+  });
+
+  describe("if there is an identity", () => {
+    const [identity, state] = buildIdentity({ properties: { personId } });
+
+    it("includes the value of the identity in the returned state", () => {
+      expect(selectUniqueIdentityValuesForPerson(personId)(state)).toEqual([
+        identity.value,
+      ]);
+    });
+  });
+
+  describe("if there are multiple identities with the same value", () => {
+    const result = buildIdentity({
+      properties: { value: "example", personId },
+    });
+    const secondResult = buildIdentity({
+      state: result[1],
+      properties: { value: "example", personId },
+    });
+
+    it("includes the value only once", () => {
+      expect(
+        selectUniqueIdentityValuesForPerson(personId)(secondResult[1])
+      ).toEqual(["example"]);
+    });
+  });
+
+  describe("if there are multiple identities with different values", () => {
+    const result = buildIdentity({
+      properties: { value: "example", personId },
+    });
+    const secondResult = buildIdentity({
+      state: result[1],
+      properties: { value: "example@example.com", personId },
+    });
+
+    it("includes one copy of each unique value", () => {
+      expect(
+        selectUniqueIdentityValuesForPerson(personId)(secondResult[1])
+      ).toEqual(["example", "example@example.com"]);
     });
   });
 });

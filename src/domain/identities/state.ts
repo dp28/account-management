@@ -22,6 +22,16 @@ export const InitialState: IdentitiesState = {
 export const selectIdentities = (state: DomainState) =>
   state.identities.identities;
 
+export const selectUniqueIdentityNames = (state: DomainState) =>
+  unique(Object.values(selectIdentities(state)).map((_) => _.name));
+
+export const selectUniqueIdentityValuesForPerson = (personId: ID) => (
+  state: DomainState
+) =>
+  unique(
+    Object.values(selectIdentitiesFor({ personId })(state)).map((_) => _.value)
+  );
+
 export const selectIdentitiesFor = ({
   personId,
   organisationId,
@@ -51,3 +61,7 @@ export const reducer = produce(
   },
   InitialState
 );
+
+function unique<T>(values: T[]): T[] {
+  return [...new Set(values)];
+}

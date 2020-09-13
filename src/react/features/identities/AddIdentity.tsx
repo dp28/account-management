@@ -6,13 +6,17 @@ import {
   AccordionSummary,
   Button,
   Typography,
-  TextField,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { addIdentity } from "../../../domain";
 import { ID } from "../../../domain/framework";
 import { PersonSelector } from "../people/PersonSelector";
+import { SuggestInput } from "../../utilityComponents/SuggestInput";
+import {
+  selectUniqueIdentityNames,
+  selectUniqueIdentityValuesForPerson,
+} from "../../../domain/identities";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,22 +63,28 @@ export function AddIdentity({ organisationId }: Props) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <TextField
-            id="identityName"
-            required
-            label="Name"
-            value={name}
-            placeholder="Eg Username, Email, etc"
-            onChange={(event) => setName(event.target.value)}
-          />
-          <TextField
-            id="identityValue"
-            required
-            label="Value"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
           <PersonSelector onChange={(person) => setPersonId(person.id)} />
+
+          <SuggestInput
+            label="Name"
+            selector={selectUniqueIdentityNames}
+            onValueChange={setName}
+            textFieldProps={{
+              value: name,
+              required: true,
+              placeholder: "Eg Username, Email, etc",
+            }}
+          />
+
+          <SuggestInput
+            label="Value"
+            selector={selectUniqueIdentityValuesForPerson(personId)}
+            onValueChange={setValue}
+            textFieldProps={{
+              value,
+              required: true,
+            }}
+          />
         </AccordionDetails>
         <AccordionActions>
           <Button type="submit">Add Identity</Button>

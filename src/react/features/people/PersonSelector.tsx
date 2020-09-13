@@ -5,9 +5,10 @@ import { FormControl, Select, InputLabel, MenuItem } from "@material-ui/core";
 
 type Props = {
   onChange: (person: Person) => void;
+  required?: boolean;
 };
 
-export function PersonSelector({ onChange }: Props) {
+export function PersonSelector({ onChange, required = true }: Props) {
   const peopleMap = useSelector(selectPeople);
   const people = Object.values(peopleMap);
 
@@ -16,6 +17,7 @@ export function PersonSelector({ onChange }: Props) {
       <InputLabel id="select-person-label">Person</InputLabel>
       <Select
         labelId="select-person-label"
+        required={required}
         onChange={(event) => onChange(peopleMap[event.target.value as string])}
       >
         {people.map((person) => (

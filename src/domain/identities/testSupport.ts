@@ -3,9 +3,9 @@ import { DomainState, InitialDomainState } from "../projection";
 import { Identity } from "./state";
 import { buildPerson } from "../people/testSupport";
 import { buildOrganisation } from "../organisations/testSupport";
+import { generateId } from "../framework";
 
 const DefaultIdentityProps = {
-  id: "1",
   name: "Username",
   value: "admin",
 };
@@ -20,6 +20,7 @@ export function buildIdentity({
   );
   const identity: Identity = {
     ...DefaultIdentityProps,
+    id: generateId(),
     personId: person.id,
     organisationId: organisation.id,
     ...properties,

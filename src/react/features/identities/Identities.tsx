@@ -1,14 +1,17 @@
 import React from "react";
-import { Identity as IdentityData, selectIdentitiesFor } from "../../../domain";
-import { AddIdentity } from "./AddIdentity";
+import { useSelector } from "react-redux";
 import {
   Accordion,
   AccordionSummary,
   Card,
   Typography,
+  makeStyles,
+  Theme,
+  createStyles,
 } from "@material-ui/core";
+import { Identity as IdentityData, selectIdentitiesFor } from "../../../domain";
 import { ID } from "../../../domain/framework";
-import { useSelector } from "react-redux";
+import { AddIdentity } from "./AddIdentity";
 
 type Props = {
   organisationId: ID;
@@ -33,10 +36,23 @@ export function Identities({ organisationId, personId }: Props) {
   );
 }
 
-export function Identity({ identity }: { identity: IdentityData }) {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    name: {
+      fontStyle: "italic",
+      color: theme.palette.grey[500],
+      marginRight: theme.spacing(1),
+    },
+  })
+);
+
+function Identity({ identity }: { identity: IdentityData }) {
+  const classes = useStyles();
   return (
     <Accordion>
-      <AccordionSummary>{identity.value}</AccordionSummary>
+      <AccordionSummary>
+        <span className={classes.name}>{identity.name}:</span> {identity.value}
+      </AccordionSummary>
     </Accordion>
   );
 }
