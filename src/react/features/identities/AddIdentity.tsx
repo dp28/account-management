@@ -21,7 +21,7 @@ import {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      "& .MuiTextField-root": {
+      "& .MuiFormControl-root": {
         margin: theme.spacing(1),
         width: "25ch",
       },
