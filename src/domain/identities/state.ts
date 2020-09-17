@@ -25,7 +25,7 @@ export interface Secret {
 
 export interface IdentitiesState {
   identities: { [id: string]: Identity };
-  secrets: { [identityId: string]: Secret[] };
+  secrets: { [identityId: string]: readonly Secret[] };
 }
 
 export const InitialState: IdentitiesState = {

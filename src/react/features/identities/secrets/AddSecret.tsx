@@ -6,17 +6,12 @@ import {
   AccordionSummary,
   Button,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import {
-  addIdentity,
-  selectUniqueIdentityNames,
-  selectUniqueIdentityValuesForPerson,
-  ID,
-} from "../../../domain";
-import { PersonSelector } from "../people/PersonSelector";
-import { SuggestInput } from "../../utilityComponents/SuggestInput";
+import { addSecret, ID, selectUniqueSecretNames } from "../../../../domain";
+import { SuggestInput } from "../../../utilityComponents/SuggestInput";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,21 +28,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  organisationId: ID;
+  identityId: ID;
 };
 
-export function AddIdentity({ organisationId }: Props) {
+export function AddSecret({ identityId }: Props) {
   const classes = useStyles();
   const [name, setName] = useState("");
-  const [value, setValue] = useState("");
-  const [personId, setPersonId] = useState("");
+  const [hint, setHint] = useState("");
+  const [restrictions, setRestrictions] = useState("");
   const dispatch = useDispatch();
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(addIdentity({ name, value, organisationId, personId }));
+    dispatch(addSecret({ name, hint, identityId, restrictions }));
     setName("");
-    setValue("");
+    setHint("");
+    setRestrictions("");
   };
 
   return (
@@ -59,35 +55,39 @@ export function AddIdentity({ organisationId }: Props) {
             color="textSecondary"
             gutterBottom
           >
-            Add new identity
+            Add new secret
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PersonSelector onChange={(person) => setPersonId(person.id)} />
-
           <SuggestInput
             label="Name"
-            selector={selectUniqueIdentityNames}
+            selector={selectUniqueSecretNames}
             onValueChange={setName}
             textFieldProps={{
               value: name,
               required: true,
-              placeholder: "Eg Username, Email, etc",
+              placeholder: "Eg Password, PIN, etc",
             }}
           />
 
-          <SuggestInput
-            label="Value"
-            selector={selectUniqueIdentityValuesForPerson(personId)}
-            onValueChange={setValue}
-            textFieldProps={{
-              value,
-              required: true,
-            }}
+          <TextField
+            label="Hint"
+            value={hint}
+            required
+            onChange={(event) => setHint(event.target.value)}
+          />
+
+          <TextField
+            label="Restrictions"
+            value={restrictions}
+            multiline
+            required
+            placeholder="Eg only numbers, must be at least 6 characters, etc"
+            onChange={(event) => setRestrictions(event.target.value)}
           />
         </AccordionDetails>
         <AccordionActions>
-          <Button type="submit">Add Identity</Button>
+          <Button type="submit">Add Secret</Button>
         </AccordionActions>
       </Accordion>
     </form>
