@@ -28,7 +28,7 @@ export function Identity({ identity }: { identity: IdentityData }) {
         <span className={classes.name}>{identity.name}:</span> {identity.value}
       </AccordionSummary>
       <AccordionDetails>
-        <Secrets identityId={identity.id} />
+        <Secrets identityId={identity.id} personId={identity.personId} />
       </AccordionDetails>
     </Accordion>
   );

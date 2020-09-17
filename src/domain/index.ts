@@ -12,6 +12,7 @@ export {
   selectUniqueSecretNames,
   selectUniqueIdentityNames,
   selectUniqueIdentityValuesForPerson,
+  selectUniqueSecretHintsForPerson,
 } from "./identities";
 export * from "./projection";
 export * from "./actions";

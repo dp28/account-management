@@ -19,9 +19,10 @@ import { AddSecret } from "./AddSecret";
 
 type Props = {
   identityId: ID;
+  personId: ID;
 };
 
-export function Secrets({ identityId }: Props) {
+export function Secrets({ identityId, personId }: Props) {
   const secrets = useSelector(selectSecretsForIdentity(identityId));
 
   return (
@@ -29,7 +30,7 @@ export function Secrets({ identityId }: Props) {
       <div>
         <Typography variant="h5">Secrets</Typography>
       </div>
-      <AddSecret identityId={identityId} />
+      <AddSecret identityId={identityId} personId={personId} />
       {secrets.map((secret) => (
         <Secret key={secret.name} secret={secret} />
       ))}

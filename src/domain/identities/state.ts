@@ -73,6 +73,16 @@ export const selectUniqueSecretNames = (state: DomainState) =>
       .map((_) => _.name)
   );
 
+export const selectUniqueSecretHintsForPerson = (personId: ID) => (
+  state: DomainState
+) => {
+  const identities = selectIdentitiesFor({ personId })(state);
+  const secrets = identities.flatMap((_) =>
+    selectSecretsForIdentity(_.id)(state)
+  );
+  return unique(secrets.map((_) => _.hint));
+};
+
 export const reducer = produce(
   (draft: Draft<IdentitiesState>, event: IdentityEvents) => {
     switch (event.type) {

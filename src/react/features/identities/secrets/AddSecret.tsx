@@ -10,7 +10,12 @@ import {
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { addSecret, ID, selectUniqueSecretNames } from "../../../../domain";
+import {
+  addSecret,
+  ID,
+  selectUniqueSecretNames,
+  selectUniqueSecretHintsForPerson,
+} from "../../../../domain";
 import { SuggestInput } from "../../../utilityComponents/SuggestInput";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,9 +34,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   identityId: ID;
+  personId: ID;
 };
 
-export function AddSecret({ identityId }: Props) {
+export function AddSecret({ identityId, personId }: Props) {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [hint, setHint] = useState("");
@@ -70,11 +76,14 @@ export function AddSecret({ identityId }: Props) {
             }}
           />
 
-          <TextField
+          <SuggestInput
             label="Hint"
-            value={hint}
-            required
-            onChange={(event) => setHint(event.target.value)}
+            selector={selectUniqueSecretHintsForPerson(personId)}
+            onValueChange={setHint}
+            textFieldProps={{
+              value: hint,
+              required: true,
+            }}
           />
 
           <TextField

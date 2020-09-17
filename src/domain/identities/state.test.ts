@@ -8,6 +8,7 @@ import {
   selectUniqueIdentityValuesForPerson,
   selectSecretsForIdentity,
   selectUniqueSecretNames,
+  selectUniqueSecretHintsForPerson,
 } from "./state";
 import { InitialDomainState } from "../projection";
 import {
@@ -240,6 +241,72 @@ describe("selectUniqueSecretNames", () => {
         "Password",
         "Memorable Information",
       ]);
+    });
+  });
+});
+
+describe("selectUniqueSecretHintsForPerson", () => {
+  const personId = "1";
+
+  it("returns an array", () => {
+    expect(
+      selectUniqueSecretHintsForPerson(personId)(InitialDomainState)
+    ).toEqual([]);
+  });
+
+  describe("if there is a secret for an identity for that person", () => {
+    const [identity, identityState] = buildIdentity({
+      properties: { personId },
+    });
+    const [secret, state] = buildSecret({
+      state: identityState,
+      properties: { identityId: identity.id },
+    });
+
+    it("includes the value of the secret in the returned state", () => {
+      expect(selectUniqueSecretHintsForPerson(personId)(state)).toEqual([
+        secret.hint,
+      ]);
+    });
+  });
+
+  describe("if there are multiple secrets with the same value", () => {
+    const [identity, identityState] = buildIdentity({
+      properties: { personId },
+    });
+    const result = buildSecret({
+      state: identityState,
+      properties: { hint: "a hint", identityId: identity.id },
+    });
+    const secondResult = buildSecret({
+      state: result[1],
+      properties: { hint: "a hint", identityId: identity.id },
+    });
+
+    it("includes the value only once", () => {
+      expect(
+        selectUniqueSecretHintsForPerson(personId)(secondResult[1])
+      ).toEqual(["a hint"]);
+    });
+  });
+
+  describe("if there are multiple identities with different values", () => {
+    const [identity, identityState] = buildIdentity({
+      properties: { personId },
+    });
+    const result = buildSecret({
+      state: identityState,
+      properties: { hint: "a hint", identityId: identity.id },
+    });
+    const secondResult = buildSecret({
+      state: result[1],
+      properties: { hint: "another hint", identityId: identity.id },
+    });
+
+    it("includes one copy of each unique value", () => {
+      expect(
+        selectUniqueSecretHintsForPerson(personId)(secondResult[1])
+      ).toEqual(["a hint", "another hint"]);
     });
   });
 });
