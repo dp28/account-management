@@ -18,6 +18,8 @@ export {
   selectIdentities,
   selectIdentitiesFor,
   selectIdentity,
+  selectSecretsForIdentity,
+  selectUniqueSecretNames,
 } from "./identities";
 export * from "./projection";
 export { performAction } from "./actions";
@@ -25,5 +27,5 @@ export { isDomainEvent, isAction } from "./framework";
 
 export type { Person } from "./people";
 export type { Organisation } from "./organisations";
-export type { Identity } from "./identities";
+export type { Identity, Secret } from "./identities";
 export type { DomainEvent, Action } from "./framework";

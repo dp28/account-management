@@ -8,7 +8,7 @@ import {
   ActionPerformerMap,
   ValidationError,
 } from "../framework";
-import { selectIdentity, Identity } from "./state";
+import { selectIdentity, Identity, Secret } from "./state";
 import { selectPerson } from "../people";
 import { selectOrganisation } from "../organisations";
 import { DomainState } from "../projection";
@@ -18,6 +18,9 @@ export const IDENTITY_ADDED = "event/IDENTITY_ADDED";
 
 export const DELETE_IDENTITY = "action/DELETE_IDENTITY";
 export const IDENTITY_DELETED = "event/IDENTITY_DELETED";
+
+export const ADD_SECRET = "action/ADD_SECRET";
+export const SECRET_ADDED = "event/SECRET_ADDED";
 
 export type IdentityInput = Omit<Identity, "id">;
 
@@ -69,9 +72,31 @@ export const performDeleteIdentity: PerformAction = (state, action) => {
   }
 };
 
-export type IdentityEvents = IdentityAddedEvent | IdentityDeletedEvent;
+export const addSecret = (input: Secret) => buildAction(ADD_SECRET, input);
+export type AddSecretAction = ReturnType<typeof addSecret>;
+
+export const buildSecretAddedEvent = (secret: Secret) =>
+  buildDomainEvent(SECRET_ADDED, secret);
+export type SecretAddedEvent = ReturnType<typeof buildSecretAddedEvent>;
+
+export const performAddSecret = (
+  state: DomainState,
+  action: AddSecretAction
+): SecretAddedEvent | ValidationError => {
+  const secret = action.payload as Secret;
+  if (!selectIdentity(secret.identityId)(state)) {
+    return buildValidationError("Identity not found", action);
+  }
+  return buildSecretAddedEvent(secret);
+};
+
+export type IdentityEvents =
+  | IdentityAddedEvent
+  | IdentityDeletedEvent
+  | SecretAddedEvent;
 
 export const actionPerformerMap: ActionPerformerMap = {
   [ADD_IDENTITY]: performAddIdentity as PerformAction,
   [DELETE_IDENTITY]: performDeleteIdentity,
+  [ADD_SECRET]: performAddSecret as PerformAction,
 };

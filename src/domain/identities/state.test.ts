@@ -6,6 +6,8 @@ import {
   selectIdentitiesFor,
   selectUniqueIdentityNames,
   selectUniqueIdentityValuesForPerson,
+  selectSecretsForIdentity,
+  selectUniqueSecretNames,
 } from "./state";
 import { InitialDomainState } from "../projection";
 import {
@@ -13,8 +15,10 @@ import {
   IDENTITY_DELETED,
   buildIdentityAddedEvent,
   buildIdentityDeletedEvent,
+  SECRET_ADDED,
+  buildSecretAddedEvent,
 } from "./events";
-import { buildIdentity } from "./testSupport";
+import { buildIdentity, buildSecret } from "./testSupport";
 
 describe("selectIdentities", () => {
   it("returns the identities map", () => {
@@ -179,6 +183,67 @@ describe("selectIdentitiesFor", () => {
   });
 });
 
+describe("selectSecretsForIdentity", () => {
+  it("returns an array", () => {
+    expect(selectSecretsForIdentity("id")(InitialDomainState)).toEqual([]);
+  });
+
+  describe("if there is an identity with that id which has a secret", () => {
+    const [secret, state] = buildSecret();
+
+    it("includes the secret in the returned state", () => {
+      expect(selectSecretsForIdentity(secret.identityId)(state)).toEqual([
+        secret,
+      ]);
+    });
+  });
+});
+
+describe("selectUniqueSecretNames", () => {
+  it("returns an array", () => {
+    expect(selectUniqueSecretNames(InitialDomainState)).toEqual([]);
+  });
+
+  describe("if there is a secret", () => {
+    const [secret, state] = buildSecret();
+
+    it("includes the name of the secret in the returned state", () => {
+      expect(selectUniqueSecretNames(state)).toEqual([secret.name]);
+    });
+  });
+
+  describe("if there are multiple secrets with the same name", () => {
+    const result = buildSecret({
+      properties: { name: "Password" },
+    });
+    const secondResult = buildSecret({
+      state: result[1],
+      properties: { name: "Password" },
+    });
+
+    it("includes the name only once", () => {
+      expect(selectUniqueSecretNames(secondResult[1])).toEqual(["Password"]);
+    });
+  });
+
+  describe("if there are multiple secrets with different names", () => {
+    const result = buildSecret({
+      properties: { name: "Password" },
+    });
+    const secondResult = buildSecret({
+      state: result[1],
+      properties: { name: "Memorable Information" },
+    });
+
+    it("includes one copy of each unique name", () => {
+      expect(selectUniqueSecretNames(secondResult[1])).toEqual([
+        "Password",
+        "Memorable Information",
+      ]);
+    });
+  });
+});
+
 describe("reducer", () => {
   describe(`with a ${IDENTITY_ADDED} event`, () => {
     const [identity, identityAddedState] = buildIdentity();
@@ -196,7 +261,7 @@ describe("reducer", () => {
     describe("when the identity has been added before", () => {
       const newState = reducer(identityAddedState.identities, event);
 
-      it("adds does not re-add the identity to the identities map", () => {
+      it("does not re-add the identity to the identities map", () => {
         expect(newState.identities).toEqual({
           [identity.id]: identity,
         });
@@ -216,6 +281,46 @@ describe("reducer", () => {
 
       it("removes the identity from the state", () => {
         expect(newState.identities[identity.id]).toBeUndefined();
+      });
+    });
+  });
+
+  describe(`with a ${SECRET_ADDED} event`, () => {
+    const [secret, secretAddedState] = buildSecret({
+      properties: { name: "Password", hint: "eeeasy" },
+    });
+
+    const event = buildSecretAddedEvent(secret);
+
+    describe("when no secret has been added for the identity before", () => {
+      const newState = reducer(InitialState, event);
+
+      it("adds the secret in a new array to the secrets map", () => {
+        expect(newState.secrets[secret.identityId]).toEqual([secret]);
+      });
+    });
+
+    describe("when a secret with a different name has been added for the identity before", () => {
+      const newSecret = { ...secret, name: "Other Password" };
+      const newEvent = buildSecretAddedEvent(newSecret);
+      const newState = reducer(secretAddedState.identities, newEvent);
+
+      it("adds the secret to the identity's array", () => {
+        expect(newState.secrets).toEqual({
+          [secret.identityId]: [secret, newSecret],
+        });
+      });
+    });
+
+    describe("when a secret with the same name has been added for the identity before", () => {
+      const newSecret = { ...secret, hint: "really hard" };
+      const newEvent = buildSecretAddedEvent(newSecret);
+      const newState = reducer(secretAddedState.identities, newEvent);
+
+      it("overwrites the existing secret", () => {
+        expect(newState.secrets).toEqual({
+          [secret.identityId]: [newSecret],
+        });
       });
     });
   });

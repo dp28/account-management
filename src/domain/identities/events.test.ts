@@ -6,10 +6,14 @@ import {
   performDeleteIdentity,
   IdentityDeletedEvent,
   IdentityInput,
+  addSecret,
+  performAddSecret,
+  SecretAddedEvent,
 } from "./events";
 import { InitialDomainState } from "../projection";
 import { VALIDATION_ERROR } from "../framework";
 import { buildIdentity } from "./testSupport";
+import { Secret } from "./state";
 
 describe("performAddIdentity", () => {
   const [otherIdentity, state] = buildIdentity();
@@ -67,6 +71,38 @@ describe("performDeleteIdentity", () => {
   describe("if the identity does not exist", () => {
     it("returns a validation error", () => {
       expect(performDeleteIdentity(InitialDomainState, action).type).toEqual(
+        VALIDATION_ERROR
+      );
+    });
+  });
+});
+
+describe("performAddSecret", () => {
+  const [identity, state] = buildIdentity();
+
+  const secret: Secret = {
+    identityId: identity.id,
+    name: "Password",
+    hint: "pretty easy",
+    restrictions: "None",
+  };
+  const action = addSecret(secret);
+  const event = performAddSecret(state, action) as SecretAddedEvent;
+
+  const propertyNames: Array<keyof Secret> = [
+    "identityId",
+    "name",
+    "restrictions",
+  ];
+  propertyNames.forEach((propertyName) => {
+    it(`creates a secret with the passed-in ${propertyName}`, () => {
+      expect(event.payload[propertyName]).toEqual(action.payload[propertyName]);
+    });
+  });
+
+  describe("if the identity does not exist", () => {
+    it("returns a validation error", () => {
+      expect(performAddSecret(InitialDomainState, action).type).toEqual(
         VALIDATION_ERROR
       );
     });
